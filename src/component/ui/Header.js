@@ -1,6 +1,10 @@
 import React, {useState, useEffect} from 'react'
-import {AppBar, Toolbar, useScrollTrigger, Tabs, Tab, Button, Menu, MenuItem} from "@material-ui/core";
-import {makeStyles} from "@material-ui/styles";
+import {
+    AppBar, Toolbar, useScrollTrigger, Tabs, Tab, Button, Menu, MenuItem, useMediaQuery,
+    SwipeableDrawer, Icon, IconButton
+} from "@material-ui/core";
+import {makeStyles, useTheme} from "@material-ui/styles";
+import MenuIcon from '@material-ui/icons/Menu';
 import {Link} from "react-router-dom";
 
 import logo from '../../assets/logo.svg'
@@ -23,11 +27,26 @@ function ElevationScroll(props) {
 const useStyles = makeStyles(theme => ({
     toolbarMargin: {
         ...theme.mixins.toolbar,
-        marginBottom: '3em'
+        marginBottom: '3em',
         //^ menampilkan isi yg terhalang oleh Appbar
+        [theme.breakpoints.down("md")]: {
+            marginBottom: "2em"
+        },
+        //    ^ membuat jarak margin menjadi 2em ketika layar berada di medium
+        [theme.breakpoints.down("xs")]: {
+            marginBottom: "1.25em"
+        }
+
     },
     logo: {
-        height: "8em"
+        height: "8em",
+        [theme.breakpoints.down("md")]: {
+            height: "7em"
+        },
+        //    ^ membuat logo menjadi 7em ketika layar berada di medium
+        [theme.breakpoints.down("xs")]: {
+            height: "5.5em"
+        }
     },
     logoContainer: {
         padding: 0,
@@ -66,33 +85,48 @@ const useStyles = makeStyles(theme => ({
         "&:hover": {
             opacity: 1
         }
+    },
+    drawerIconContainer: {
+        marginLeft: "auto",
+        "&:hover": {
+            backgroundColor: "transparent"
+        }
+    },
+    drawerIcon: {
+        height: "50px",
+        width: "50px"
     }
 }))
 
 export default function Header(props) {
     const classes = useStyles();
+    const theme = useTheme();
+    const iOS = process.browser && /iPad|iPhone|iPod/.test(navigator.userAgent);
+    const matches = useMediaQuery(theme.breakpoints.down("md"))
+
+    const [openDrawer, setOpenDrawer] = useState(false)
     const [value, setValue] = useState(0)
     const [anchorEl, setAnchorEl] = useState(null)
-    const [open, setOpen] = useState(false)
+    const [openMenu, setOpenMenu] = useState(false)
     const [selectedIndex, setSelectedIndex] = useState(0)
 
-    const handleChange = (e, value) => {
-        setValue(value)
+    const handleChange = (e, newValue) => {
+        setValue(newValue)
     }
 
     const handleClick = (e) => {
         setAnchorEl(e.currentTarget)
-        setOpen(true)
+        setOpenMenu(true)
     }
 
     const handleClose = (e) => {
         setAnchorEl(null)
-        setOpen(false)
+        setOpenMenu(false)
     }
 
     const handleMenuItemClick = (e, i) => {
         setAnchorEl(null)
-        setOpen(false)
+        setOpenMenu(false)
         setSelectedIndex(i)
     }
 
@@ -127,7 +161,7 @@ export default function Header(props) {
         }
 
         switch (window.location.pathname) {
-            //^ untuk mengatuk ketika sedang berada di suatu url, active tab akan mengikutin url yg tersedia
+            //^ untuk mengatur ketika sedang berada di suatu url, active tab akan mengikutin url yg tersedia
             case "/":
                 if (value !== 0) {
                     setValue(0)
@@ -181,6 +215,82 @@ export default function Header(props) {
                 break;
         }
     }, [value])
+
+    const tabs = (
+        //ditampilkan ketika layar berukuran >= medium const matches = useMediaQuery(theme.breakpoints.down("md"))
+        <>
+            <Tabs
+                value={value}
+                onChange={handleChange}
+                className={classes.tabContainer}
+                indicatorColor={'primary'}
+            >
+                {/* indicatorColor => untuk menghilangkan garis bawah di tab dengan mengganti warna sama menjadi warna primary*/}
+                <Tab className={classes.tab}
+                     component={Link}
+                     to={"/"}
+                     label={"Home"}/>
+                <Tab
+                    aria-owns={anchorEl ? "simple-menu" : undefined}
+                    aria-haspopup={anchorEl ? "true" : undefined}
+                    onMouseOver={(e) => handleClick(e)}
+                    className={classes.tab}
+                    to={"/services"}
+                    component={Link} label={"Services"}/>
+                <Tab className={classes.tab}
+                     to={"/revolution"}
+                     component={Link} label={"The Revolution"}/>
+                <Tab className={classes.tab}
+                     to={"/about"}
+                     component={Link} label={"About Us"}/>
+                <Tab className={classes.tab}
+                     to={"/contact"}
+                     component={Link} label={"Contact Us"}/>
+            </Tabs>
+            <Button variant={"contained"} color={'secondary'} className={classes.button}>
+                Free Estimate
+            </Button>
+            <Menu id={"simple-menu"} anchorEl={anchorEl} open={openMenu}
+                  onClose={handleClose}
+                  MenuListProps={{onMouseLeave: handleClose}}
+                  onClick={() => {
+                      handleClose();
+                      setValue(1)
+                  }}
+                  classes={{paper: classes.menu}}
+                  elevation={0}
+            >
+
+                {menuOptions.map((option, i) => (
+                    <MenuItem key={option} onClick={(e) => {
+                        handleMenuItemClick(e, i);
+                        setValue(1)
+                    }}
+                              selected={i === selectedIndex && value === 1}
+                              component={Link} to={option.link}
+                              classes={{root: classes.menuItem}}
+                    >{option.name}
+                    </MenuItem>
+                ))}
+                {/*^ terpilih ketika value nya 1 atau berada di tabs services ,
+                            selected={i === selectedIndex && value === 1}*/}
+            </Menu>
+        </>
+    )
+
+    const drawer = (
+        //ditampilkan ketika layar berukuran < medium
+        <>
+            <SwipeableDrawer anchor={"right"} disableBackdropTransition={!iOS} disableDiscovery={iOS} open={openDrawer}
+                             onClose={() => setOpenDrawer(false)} onOpen={() => setOpenDrawer(true)}>
+                Example Drawer
+            </SwipeableDrawer>
+            <IconButton className={classes.drawerIconContainer} onClick={() => setOpenDrawer(!openDrawer)}
+                        disableRipple>
+                <MenuIcon className={classes.drawerIcon}/>
+            </IconButton>
+        </>
+    )
     return (
         <React.Fragment>
             <ElevationScroll>
@@ -190,62 +300,7 @@ export default function Header(props) {
                                 className={classes.logoContainer}>
                             <img src={logo} alt="company logo" className={classes.logo}/>
                         </Button>
-                        <Tabs
-                            value={value}
-                            onChange={handleChange}
-                            className={classes.tabContainer}
-                            indicatorColor={'primary'}
-                        >
-                            {/* indicatorColor => untuk menghilangkan garis bawah di tab dengan mengganti warna sama menjadi warna primary*/}
-                            <Tab className={classes.tab}
-                                 component={Link}
-                                 to={"/"}
-                                 label={"Home"}/>
-                            <Tab
-                                aria-owns={anchorEl ? "simple-menu" : undefined}
-                                aria-haspopup={anchorEl ? "true" : undefined}
-                                onMouseOver={(e) => handleClick(e)}
-                                className={classes.tab}
-                                to={"/services"}
-                                component={Link} label={"Services"}/>
-                            <Tab className={classes.tab}
-                                 to={"/revolution"}
-                                 component={Link} label={"The Revolution"}/>
-                            <Tab className={classes.tab}
-                                 to={"/about"}
-                                 component={Link} label={"About Us"}/>
-                            <Tab className={classes.tab}
-                                 to={"/contact"}
-                                 component={Link} label={"Contact Us"}/>
-                        </Tabs>
-                        <Button variant={"contained"} color={'secondary'} className={classes.button}>
-                            Free Estimate
-                        </Button>
-                        <Menu id={"simple-menu"} anchorEl={anchorEl} open={open}
-                              onClose={handleClose}
-                              MenuListProps={{onMouseLeave: handleClose}}
-                              onClick={() => {
-                                  handleClose();
-                                  setValue(1)
-                              }}
-                              classes={{paper: classes.menu}}
-                              elevation={0}
-                        >
-
-                            {menuOptions.map((option, i) => (
-                                <MenuItem key={option} onClick={(e) => {
-                                    handleMenuItemClick(e, i);
-                                    setValue(1)
-                                }}
-                                          selected={i === selectedIndex && value === 1}
-                                          component={Link} to={option.link}
-                                          classes={{root: classes.menuItem}}
-                                >{option.name}
-                                </MenuItem>
-                            ))}
-                            {/*^ terpilih ketika value nya 1 atau berada di tabs services ,
-                            selected={i === selectedIndex && value === 1}*/}
-                        </Menu>
+                        {matches ? drawer : tabs}
                     </Toolbar>
                 </AppBar>
             </ElevationScroll>
