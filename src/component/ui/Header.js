@@ -125,13 +125,12 @@ export default function Header(props) {
     const matches = useMediaQuery(theme.breakpoints.down("md"))
 
     const [openDrawer, setOpenDrawer] = useState(false)
-    const [value, setValue] = useState(0)
+
     const [anchorEl, setAnchorEl] = useState(null)
     const [openMenu, setOpenMenu] = useState(false)
-    const [selectedIndex, setSelectedIndex] = useState(0)
 
     const handleChange = (e, newValue) => {
-        setValue(newValue)
+        props.setValue(newValue)
     }
 
     const handleClick = (e) => {
@@ -147,9 +146,9 @@ export default function Header(props) {
     const handleMenuItemClick = (e, i) => {
         setAnchorEl(null)
         setOpenMenu(false)
-        setSelectedIndex(i)
+        props.setSelectedIndex(i)
     }
-
+// eslint-disable-next-line
     const menuOptions = [
         {
             name: "Services",
@@ -159,21 +158,21 @@ export default function Header(props) {
         }, {
             name: "Custom Software Development",
             link: "/customsoftware",
-            activeIndex: 2,
+            activeIndex: 1,
             selectedIndex: 1
         }, {
             name: "Mobile App Development",
             link: "/mobileapps",
-            activeIndex: 3,
+            activeIndex: 1,
             selectedIndex: 2
         }, {
             name: "Website Development",
             link: "/websites",
-            activeIndex: 4,
+            activeIndex: 1,
             selectedIndex: 3
         },
     ]
-
+// eslint-disable-next-line
     const routes = [
         {
             name: "Home",
@@ -210,24 +209,27 @@ export default function Header(props) {
         [...menuOptions, ...routes].forEach(route => {
             switch (window.location.pathname) {
                 case `${route.link}`:
-                    if (value !== route.activeIndex) {
-                        setValue(route.activeIndex)
-                        if (route.selectedIndex && route.selectedIndex !== selectedIndex) {
-                            setSelectedIndex(route.selectedIndex)
+                    if (props.value !== route.activeIndex) {
+                        props.setValue(route.activeIndex)
+                        if (route.selectedIndex && route.selectedIndex !== props.selectedIndex) {
+                            props.setSelectedIndex(route.selectedIndex)
                         }
                     }
+                    break;
+                case "/estimate":
+                    props.setValue(5);
                     break;
                 default:
                     break;
             }
         })
-    }, [value, menuOptions, selectedIndex, routes])
+    }, [props.value, menuOptions, props.selectedIndex, routes, props])
 
     const tabs = (
         //ditampilkan ketika layar berukuran >= medium const matches = useMediaQuery(theme.breakpoints.down("md"))
         <>
             <Tabs
-                value={value}
+                value={props.value}
                 onChange={handleChange}
                 className={classes.tabContainer}
                 indicatorColor={'primary'}
@@ -240,7 +242,7 @@ export default function Header(props) {
                         component={Link}
                         to={route.link}
                         label={route.name}
-                        aria-haspopup={route?.ariaPopup}
+                        aria-haspopup={route.ariaPopup}
                         aria-owns={route?.ariaOwns}
                         onMouseOver={route.mouseOver}
                     />
@@ -254,7 +256,7 @@ export default function Header(props) {
                   MenuListProps={{onMouseLeave: handleClose}}
                   onClick={() => {
                       handleClose();
-                      setValue(1)
+                      props.setValue(1)
                   }}
                   style={{zIndex: 1302}}
                   classes={{paper: classes.menu}}
@@ -265,9 +267,9 @@ export default function Header(props) {
                 {menuOptions.map((option, i) => (
                     <MenuItem key={`${option}${i}`} onClick={(e) => {
                         handleMenuItemClick(e, i);
-                        setValue(option.selectedIndex)
+                        props.setValue(1)
                     }}
-                              selected={i === selectedIndex}
+                              selected={i === props.selectedIndex}
                               component={Link} to={option.link}
                               classes={{root: classes.menuItem}}
                     >{option.name}
@@ -297,11 +299,11 @@ export default function Header(props) {
                             key={`${route}${index}`}
                             onClick={() => {
                                 setOpenDrawer(false);
-                                setValue(route.activeIndex)
+                                props.setValue(route.activeIndex)
                             }}
                             divider button component={Link}
                             to={route.link}
-                            selected={value === route.activeIndex}
+                            selected={props.value === route.activeIndex}
                             classes={{selected: classes.drawerItemSelected}}
                         >
                             <ListItemText disableTypography
@@ -313,10 +315,10 @@ export default function Header(props) {
                     <ListItem classes={{root: classes.drawerItemEstimate, selected: classes.drawerItemSelected}}
                               onClick={() => {
                                   setOpenDrawer(false);
-                                  setValue(5)
+                                  props.setValue(5)
                               }} divider button
                               component={Link} to={"/estimate"}
-                              selected={value === 5}
+                              selected={props.value === 5}
                     >
                         <ListItemText className={classes.drawerItem}
                                       disableTypography>Free Estimate</ListItemText>
@@ -334,7 +336,7 @@ export default function Header(props) {
             <ElevationScroll>
                 <AppBar position={"fixed"} className={classes.appBar}>
                     <Toolbar disableGutters>
-                        <Button component={Link} disableRipple to={"/"} onClick={() => setValue(0)}
+                        <Button component={Link} disableRipple to={"/"} onClick={() => props.setValue(0)}
                                 className={classes.logoContainer}>
                             <img src={logo} alt="company logo" className={classes.logo}/>
                         </Button>
