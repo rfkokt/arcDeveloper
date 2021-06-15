@@ -4,6 +4,7 @@ import img_2 from "./img_2.png";
 import img_3 from "./img_3.png";
 import img_4 from "./img_4.png";
 
+// eslint-disable-next-line
 export default {
   v: "5.5.5",
   fr: 29.9700012207031,

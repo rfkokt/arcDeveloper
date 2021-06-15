@@ -71,6 +71,9 @@ const useStyles = makeStyles(theme => ({
         marginLeft: '50px',
         marginRight: '25px',
         height: '45px',
+        "&:hover": {
+            backgroundColor: theme.palette.secondary.light,
+        }
     },
     menu: {
         backgroundColor: theme.palette.common.blue,
@@ -181,7 +184,7 @@ export default function Header(props) {
         },
         {
             name: "Services",
-            link: "/service",
+            link: "/services",
             activeIndex: 1,
             ariaOwns: anchorEl ? "simple-menu" : undefined,
             ariaPopup: anchorEl ? "true" : undefined,
