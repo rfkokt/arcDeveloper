@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/arcdevelopment.iml" filepath="$PROJECT_DIR$/.idea/arcdevelopment.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/arcDeveloper.iml" filepath="$PROJECT_DIR$/.idea/arcDeveloper.iml" />
     </modules>
   </component>
 </project>

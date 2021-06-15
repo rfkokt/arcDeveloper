@@ -1,24 +1,34 @@
-import {createMuiTheme} from "@material-ui/core/styles";
+import {createMuiTheme} from '@material-ui/core/styles';
 
 const arcBlue = "#0B72B9"
 const arcOrange = "#FFBA60"
-
 export default createMuiTheme({
     palette: {
-        common :{
+        type: "dark",
+        common : {
             blue : `${arcBlue}`,
             orange : `${arcOrange}`
         },
         primary :{
-            main:`${arcBlue}`
+            main : `${arcBlue}`
         },
-        secondary:{
-            main : `${arcOrange}`
+        secondary :{
+            main :`${arcOrange}`
         }
     },
-    typography:{
-        h3:{
-            fontWeight:300,
+    typography :{
+        tab : {
+            fontFamily : "Raleway",
+            textTransform : "none",
+            fontWeight : 700,
+            fontSize : '1rem',
+        },
+    //    ^ bisa membuat class sendiri untuk digunakan universal, dengan mengakses makeStyles(theme => ({
+        estimate : {
+            fontFamily : "Pacifico",
+            fontSize : '1rem',
+            textTransform : "none",
+            color : 'white'
         }
     }
 })
