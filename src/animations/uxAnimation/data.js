@@ -17,7 +17,7 @@ import img15 from "./img_15.png";
 import img16 from "./img_16.png";
 import img17 from "./img_17.png";
 import img18 from "./img_18.png";
-
+// eslint-disable-next-line
 export default {
   v: "5.5.9",
   fr: 29.9700012207031,
