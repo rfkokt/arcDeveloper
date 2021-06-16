@@ -7,12 +7,13 @@ import facebook from '../../assets/facebook.svg'
 import twitter from '../../assets/twitter.svg'
 import instagram from '../../assets/instagram.svg'
 
-const useStyle = makeStyles(theme => ({
+const useStyles = makeStyles(theme => ({
     footer: {
         backgroundColor: theme.palette.common.blue,
         width: "100%",
         zIndex: 1302,
-        position: 'relative'
+        position: 'relative',
+        marginTop : '1000px'
     },
     adornment: {
         width: '25em',
@@ -56,7 +57,7 @@ const useStyle = makeStyles(theme => ({
     }
 }))
 export default function Footer(props) {
-    const classes = useStyle()
+    const classes = useStyles()
 
     return (
         <footer className={classes.footer}>

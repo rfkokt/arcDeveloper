@@ -2,11 +2,11 @@ import React from "react";
 import Lottie from 'react-lottie'
 import {makeStyles, useTheme} from "@material-ui/core/styles";
 import animationData from '../../animations/landinganimation/data'
-import {Button, Grid, Typography} from "@material-ui/core";
+import {Button, Grid, Typography, useMediaQuery} from "@material-ui/core";
 import ButtonArrow from "./ButtonArrow";
 import customSofwareIcon from '../../assets/Custom Software Icon.svg'
 
-const useStyle = makeStyles(theme => ({
+const useStyles = makeStyles(theme => ({
     animation: {
         maxWidth: "50em",
         mixWidth: "21em",
@@ -30,17 +30,20 @@ const useStyle = makeStyles(theme => ({
     buttonContainer: {
         marginTop: "1em"
     },
-    learnButton: {
+    learnButtonHero: {
         ...theme.typography.learnButton,
         fontSize: "0.9rem",
         height: 45,
         width: 145,
     },
-    learnButtonStyle: {
+    learnButton: {
         ...theme.typography.learnButton,
-        fontSize: "0.7rem",
+        fontSize: "0.9rem",
         height: 35,
-        padding: 5
+        padding: 5,
+        [theme.breakpoints.down("sm")]: {
+            marginBottom: "2em"
+        }
     },
     mainContainer: {
         marginTop: "5em",
@@ -62,15 +65,27 @@ const useStyle = makeStyles(theme => ({
         fontFamily: "Pacifico",
         color: theme.palette.common.orange,
     },
-    subtittle: {
+    subtitle: {
         marginBottom: "1em"
+    },
+    icon: {
+        marginLeft: '2em',
+        [theme.breakpoints.down("xs")]: {
+            marginLeft: 0,
+        }
+    },
+    serviceContainer: {
+        marginTop: "12em",
+        [theme.breakpoints.down("sm")]: {
+            padding: 25
+        }
     }
 }))
 
 export default function LandingPage() {
-    const classes = useStyle();
+    const classes = useStyles();
     const theme = useTheme();
-
+    const matchesSM = useMediaQuery(theme.breakpoints.down("sm"))
     const defaultOption = {
         loop: true,
         autoplay: true,
@@ -96,7 +111,7 @@ export default function LandingPage() {
                                 <Button className={classes.estimateButton} variant={'contained'}>Free Estimate</Button>
                             </Grid>
                             <Grid item>
-                                <Button variant={"outlined"} className={classes.learnButton}>
+                                <Button variant={"outlined"} className={classes.learnButtonHero}>
                                     <span style={{marginRight: 10}}>
                                         Learn More
                                     </span> <ButtonArrow width={15} height={15} fill={theme.palette.common.blue}/>
@@ -109,8 +124,10 @@ export default function LandingPage() {
                     </Grid>
                 </Grid>
                 {/*----- Serivces Block -----*/}
-                <Grid container direction={"row"}>
-                    <Grid>
+
+                <Grid justify={matchesSM ? "center" : undefined} container direction={"row"}
+                      className={classes.serviceContainer}>
+                    <Grid item style={{marginLeft: matchesSM ? 0 : "5em", textAlign: matchesSM ? "center" : undefined}}>
                         <Typography variant={'h4'}>
                             Custom Software Development
                         </Typography>
@@ -129,7 +146,7 @@ export default function LandingPage() {
                         </Button>
                     </Grid>
                     <Grid item>
-                        <img src={customSofwareIcon} alt="Custom Software Icon"/>
+                        <img className={classes.icon} src={customSofwareIcon} alt="Custom Software Icon"/>
                     </Grid>
                 </Grid>
             </Grid>
