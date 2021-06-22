@@ -13,7 +13,7 @@ const useStyles = makeStyles(theme => ({
         width: "100%",
         zIndex: 1302,
         position: 'relative',
-        marginTop : '1000px'
+        // marginTop : '100px'
     },
     adornment: {
         width: '25em',

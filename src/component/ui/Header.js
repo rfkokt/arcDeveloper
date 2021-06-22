@@ -164,7 +164,7 @@ export default function Header(props) {
             activeIndex: 1,
             selectedIndex: 1
         }, {
-            name: "Mobile App Development",
+            name: "iOS/Android App Development",
             link: "/mobileapps",
             activeIndex: 1,
             selectedIndex: 2
@@ -251,7 +251,13 @@ export default function Header(props) {
                     />
                 ))}
             </Tabs>
-            <Button variant={"contained"} color={'secondary'} className={classes.button}>
+            <Button onClick={() => props.setValue(5)}
+                    component={Link}
+                    to={"/estimate"}
+                    variant={"contained"}
+                    color={'secondary'}
+                    className={classes.button}
+            >
                 Free Estimate
             </Button>
             <Menu id={"simple-menu"} anchorEl={anchorEl} open={openMenu}
